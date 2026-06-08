@@ -27,7 +27,7 @@ public class Atributo {
     @Builder.Default
     private List<ValorAtributo> valores = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "atributos", fetch = FetchType.LAZY)
     @Builder.Default
     private List<Producto> productos = new ArrayList<>();
 

@@ -24,11 +24,8 @@ public class ValorAtributo {
     @JoinColumn(name = "atributo_id", nullable = false)
     private Atributo atributo;
 
-    @OneToMany(mappedBy = "valorAtributo", 
-        cascade = CascadeType.ALL, // actuar s/padre entero repica en el hijo
-        orphanRemoval = true,       // al desconectar un hijo no queda huérfano
-        fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "valoresAtributo", fetch = FetchType.LAZY)
     @Builder.Default
-    private List<VarianteValor> varianteValores = new ArrayList<>();
+    private List<VarianteProducto> variantes = new ArrayList<>();
 
 }

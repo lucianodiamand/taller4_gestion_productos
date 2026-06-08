@@ -10,26 +10,21 @@ import java.util.ArrayList;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor // requerido por JPA y Builder
 @Builder
-@Table(name = "categoria")
-public class Categoria {
+@Table(name = "departamento")
+public class Departamento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // mejor que .AUTO
     private Long id;
 
-    @Column(name = "nombre", nullable = false, length = 50)
+    @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
 
-    // Agregamos departamentos
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "departamento_id", nullable = false)
-    private Departamento departamento;
-
-    @OneToMany(mappedBy = "categoria", 
+    @OneToMany(mappedBy = "departamento", 
         cascade = CascadeType.ALL, // actuar s/padre entero repica en el hijo
         orphanRemoval = true,       // al desconectar un hijo no queda huérfano
         fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Producto> productos = new ArrayList<>();
+    @Builder.Default // con el `new` evitamos NullPointerException
+    private List<Categoria> categorias = new ArrayList<>();
 
 }

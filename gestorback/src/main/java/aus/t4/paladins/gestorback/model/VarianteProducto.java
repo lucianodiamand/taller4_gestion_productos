@@ -31,11 +31,13 @@ public class VarianteProducto {
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
-    @OneToMany(mappedBy = "variante", 
-        cascade = CascadeType.ALL, // actuar s/padre entero repica en el hijo
-        orphanRemoval = true,       // al desconectar un hijo no queda huérfano
-        fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<VarianteValor> varianteValores = new ArrayList<>();
+    // Tabla intermedia: variante_valor
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "variante_valor",
+        JoinColumns = @JoinColumn(name = "variante_id"),
+        inverseJoinColumns = @JoinColumn(name = "valor_atibuto_id")
+    ) // podría obviarse, union explicita por las id.
+    @Builder.Default // con el `new` evitamos NullPointerException
+    private List<ValorAtributo> valoresAtributo = new ArrayList<>();
 
 }
