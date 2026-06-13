@@ -2,7 +2,7 @@
 
 ## Proyecto full-stack para Taller 4
 
-### Integrantes del grupete!!!!!!!!!!!
+### Integrantes del grupetete
 
 - Andre Busnelli
 - Manuela Cepeda
@@ -29,4 +29,6 @@
 - Valores posibles por atributos (ejemplo talle puede ser S, XL, L etc, paginas seria numerico...)
 - Hay atributos realmente generales? por ejemplo nombre del producto, descripcion, color, tamaño?
 
+
+#### pie de paginasssssssss
 
