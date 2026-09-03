@@ -1,32 +1,30 @@
 package aus.t4.paladins.gestorback.controller;
 
-import aus.t4.paladins.gestorback.dto.VarianteProductoRequestDTO;
-import aus.t4.paladins.gestorback.dto.VarianteProductoResponseDTO;
-import aus.t4.paladins.gestorback.service.VarianteProductoService;
+import aus.t4.paladins.gestorback.dto.CategoriaRequestDTO;
+import aus.t4.paladins.gestorback.dto.CategoriaResponseDTO;
+import aus.t4.paladins.gestorback.service.CategoriaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/variantes")
-public class VarianteProductoController {
+@RequestMapping("/api/categorias")
+public class CategoriaController {
 
-    private final VarianteProductoService service;
+    private final CategoriaService service;
 
-    public VarianteProductoController(
-            VarianteProductoService service) {
-
+    public CategoriaController(CategoriaService service) {
         this.service = service;
     }
 
     @GetMapping
-    public List<VarianteProductoResponseDTO> findAll() {
+    public List<CategoriaResponseDTO> findAll() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VarianteProductoResponseDTO> findById(
+    public ResponseEntity<CategoriaResponseDTO> findById(
             @PathVariable Long id) {
 
         return service.findById(id)
@@ -35,8 +33,8 @@ public class VarianteProductoController {
     }
 
     @PostMapping
-    public ResponseEntity<VarianteProductoResponseDTO> create(
-            @RequestBody VarianteProductoRequestDTO request) {
+    public ResponseEntity<CategoriaResponseDTO> create(
+            @RequestBody CategoriaRequestDTO request) {
 
         return service.save(request)
                 .map(ResponseEntity::ok)
@@ -44,9 +42,9 @@ public class VarianteProductoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<VarianteProductoResponseDTO> update(
+    public ResponseEntity<CategoriaResponseDTO> update(
             @PathVariable Long id,
-            @RequestBody VarianteProductoRequestDTO request) {
+            @RequestBody CategoriaRequestDTO request) {
 
         return service.update(id, request)
                 .map(ResponseEntity::ok)
@@ -54,8 +52,7 @@ public class VarianteProductoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
 
         if (!service.deleteById(id)) {
             return ResponseEntity.notFound().build();

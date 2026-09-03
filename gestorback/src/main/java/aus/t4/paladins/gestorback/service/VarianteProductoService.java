@@ -1,49 +1,131 @@
 package aus.t4.paladins.gestorback.service;
 
+import aus.t4.paladins.gestorback.dto.VarianteProductoRequestDTO;
 import aus.t4.paladins.gestorback.dto.VarianteProductoResponseDTO;
 import aus.t4.paladins.gestorback.mapper.VarianteProductoMapper;
+import aus.t4.paladins.gestorback.model.Producto;
+import aus.t4.paladins.gestorback.model.ValorAtributo;
 import aus.t4.paladins.gestorback.model.VarianteProducto;
+import aus.t4.paladins.gestorback.repository.ProductoRepository;
+import aus.t4.paladins.gestorback.repository.ValorAtributoRepository;
 import aus.t4.paladins.gestorback.repository.VarianteProductoRepository;
-import aus.t4.paladins.gestorback.service.IVarianteProductoService;
-import jakarta.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
-@Transactional
-public class VarianteProductoService implements IVarianteProductoService {
+public class VarianteProductoService {
 
-  // private final VarianteProductoRepository repository;
-  @Autowired
-  private VarianteProductoRepository varianteRepository;
+    private final VarianteProductoRepository repository;
+    private final ProductoRepository productoRepository;
+    private final ValorAtributoRepository valorAtributoRepository;
 
-  /*
-   * public VarianteProductoService(VarianteProductoRepository varianteRepository)
-   * {
-   * this.varianteRepository = varianteRepository;
-   * }
-   */
-  /*
-   * Comento el constructor.
-   * Java genera automáticamente un constructor vacío.
-   * Spring invoca ese constructor y completa el campo marcado con `@Autowired`."
-   */
+    public VarianteProductoService(
+            VarianteProductoRepository repository,
+            ProductoRepository productoRepository,
+            ValorAtributoRepository valorAtributoRepository) {
 
-  @Transactional
-  public List<VarianteProductoResponseDTO> findAll() {
-    return varianteRepository.findAll().stream()
-        .map(VarianteProductoMapper::toDTO)
-        .collect(Collectors.toList());
-  }
+        this.repository = repository;
+        this.productoRepository = productoRepository;
+        this.valorAtributoRepository = valorAtributoRepository;
+    }
 
-  @Transactional
-  public Optional<VarianteProductoResponseDTO> findById(Long id) {
-    return varianteRepository.findById(id)
-        .map(VarianteProductoMapper::toDTO);
-  }
+    public List<VarianteProductoResponseDTO> findAll() {
+        return repository.findAll()
+                .stream()
+                .map(VarianteProductoMapper::toDTO)
+                .toList();
+    }
+
+    public Optional<VarianteProductoResponseDTO> findById(
+            Long id) {
+
+        return repository.findById(id)
+                .map(VarianteProductoMapper::toDTO);
+    }
+
+    public Optional<VarianteProductoResponseDTO> save(
+            VarianteProductoRequestDTO request) {
+
+        Optional<Producto> producto =
+                productoRepository.findById(request.getProductoId());
+
+        if (producto.isEmpty()) {
+            return Optional.empty();
+        }
+
+        List<ValorAtributo> valores =
+                valorAtributoRepository.findAllById(
+                        request.getValoresAtributoIds()
+                );
+
+        if (valores.size() != request.getValoresAtributoIds().size()) {
+            return Optional.empty();
+        }
+
+        VarianteProducto variante =
+                new VarianteProducto();
+
+        variante.setSku(request.getSku());
+        variante.setPrecioExtra(request.getPrecioExtra());
+        variante.setStock(request.getStock());
+        variante.setProducto(producto.get());
+        variante.setValoresAtributo(valores);
+
+        VarianteProducto saved =
+                repository.save(variante);
+
+        return Optional.of(
+                VarianteProductoMapper.toDTO(saved)
+        );
+    }
+
+    public Optional<VarianteProductoResponseDTO> update(
+            Long id,
+            VarianteProductoRequestDTO request) {
+
+        Optional<Producto> producto =
+                productoRepository.findById(request.getProductoId());
+
+        if (producto.isEmpty()) {
+            return Optional.empty();
+        }
+
+        List<ValorAtributo> valores =
+                valorAtributoRepository.findAllById(
+                        request.getValoresAtributoIds()
+                );
+
+        if (valores.size() != request.getValoresAtributoIds().size()) {
+            return Optional.empty();
+        }
+
+        return repository.findById(id)
+                .map(variante -> {
+
+                    variante.setSku(request.getSku());
+                    variante.setPrecioExtra(
+                            request.getPrecioExtra());
+                    variante.setStock(request.getStock());
+                    variante.setProducto(producto.get());
+                    variante.setValoresAtributo(valores);
+
+                    VarianteProducto updated =
+                            repository.save(variante);
+
+                    return VarianteProductoMapper
+                            .toDTO(updated);
+                });
+    }
+
+    public boolean deleteById(Long id) {
+
+        if (!repository.existsById(id)) {
+            return false;
+        }
+
+        repository.deleteById(id);
+        return true;
+    }
 }
