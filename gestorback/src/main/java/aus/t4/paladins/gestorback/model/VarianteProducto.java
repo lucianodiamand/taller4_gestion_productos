@@ -34,8 +34,8 @@ public class VarianteProducto {
     // Tabla intermedia: variante_valor
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "variante_valor",
-        JoinColumns = @JoinColumn(name = "variante_id"),
-        inverseJoinColumns = @JoinColumn(name = "valor_atibuto_id")
+        joinColumns = @JoinColumn(name = "variante_id"),
+        inverseJoinColumns = @JoinColumn(name = "valor_atributo_id")
     ) // podría obviarse, union explicita por las id.
     @Builder.Default // con el `new` evitamos NullPointerException
     private List<ValorAtributo> valoresAtributo = new ArrayList<>();
