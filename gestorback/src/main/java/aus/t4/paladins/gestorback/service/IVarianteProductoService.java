@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IVarianteProductoService {
-  // VarianteProductoResponseDTO create(VarianteProductoRequestDTO dto);
+  Optional<VarianteProductoResponseDTO> save(VarianteProductoRequestDTO request);
 
   Optional<VarianteProductoResponseDTO> findById(Long id);
 
@@ -16,6 +16,7 @@ public interface IVarianteProductoService {
   // VarianteProductoResponseDTO findBySku(String sku);
   // List<VarianteProductoResponseDTO> findByProducto(Long productoId);
 
-  // VarianteProductoResponseDTO update(Long id, VarianteProductoRequestDTO dto);
-  // void delete(Long id);
+  Optional<VarianteProductoResponseDTO> update(Long id, VarianteProductoRequestDTO request);
+
+  boolean deleteById(Long id);
 }
